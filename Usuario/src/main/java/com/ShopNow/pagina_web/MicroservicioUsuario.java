@@ -13,10 +13,10 @@ import com.ShopNow.pagina_web.usuario.repository.UserRepository;
 
 @SpringBootApplication
 @EnableFeignClients
-public class PaginaWebApplication {
+public class MicroservicioUsuario {
 
     public static void main(String[] args) {
-        SpringApplication.run(PaginaWebApplication.class, args);
+        SpringApplication.run(MicroservicioUsuario.class, args);
     }
 
     @Bean

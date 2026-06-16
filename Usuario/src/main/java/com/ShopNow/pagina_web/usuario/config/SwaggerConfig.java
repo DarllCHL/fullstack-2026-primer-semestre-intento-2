@@ -28,9 +28,9 @@ public class SwaggerConfig {
                                 .scheme("bearer")
                                 .bearerFormat("JWT")))
                 .tags(List.of(
+                        new Tag().name("Autenticación").description("Endpoints para login y registro de usuarios del sistema"),
                         new Tag().name("Administración").description("Endpoints exclusivos para usuarios con rol ADMIN"),
                         new Tag().name("Órdenes").description("Consultas entre microservicios — Usuario consulta a Producto"),
-                        new Tag().name("Autenticación").description("Endpoints para login y registro de usuarios del sistema"),
                         new Tag().name("Usuarios").description("Operaciones CRUD para la gestión de usuarios"),
                         new Tag().name("Administración BD").description("Endpoints para administración de la base de datos")
                 ));
