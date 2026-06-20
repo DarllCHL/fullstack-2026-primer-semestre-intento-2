@@ -5,39 +5,35 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.flywaydb.core.Flyway;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
-
 @RestController
 @RequestMapping("/admin/db")
-@Tag(name = "Administración BD", description = "Endpoints para verificar el estado de la base de datos")
+@Tag(name = "🔑 Administrador", description = "Endpoints exclusivos para usuarios con rol ROLE_ADMIN")
 @SecurityRequirement(name = "Bearer Token")
 public class DatabaseAdminController {
 
-    @Autowired
-    private DataSource dataSource;
+    private final Flyway flyway;
+
+    public DatabaseAdminController(Flyway flyway) {
+        this.flyway = flyway;
+    }
 
     @Operation(
-            summary = "Verificar conexión a la base de datos",
-            description = "Comprueba que la conexión con la base de datos MySQL esté activa y funcionando correctamente"
+            summary = "Reparar historial de Flyway",
+            description = "Limpia las entradas fallidas en la tabla flyway_schema_history para permitir reintentar migraciones. Solo ADMIN."
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Conexión exitosa a la base de datos"),
+            @ApiResponse(responseCode = "200", description = "Historial de Flyway reparado exitosamente"),
             @ApiResponse(responseCode = "401", description = "No autorizado, token inválido o ausente"),
             @ApiResponse(responseCode = "403", description = "Acceso denegado, se requiere rol ADMIN"),
-            @ApiResponse(responseCode = "500", description = "Error al conectar con la base de datos")
+            @ApiResponse(responseCode = "500", description = "Error al reparar el historial")
     })
-    @GetMapping("/check")
-    public ResponseEntity<String> checkDatabase() {
-        try (Connection connection = dataSource.getConnection()) {
-            return ResponseEntity.ok("Conexión exitosa a: " + connection.getMetaData().getURL());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body("Error de conexión: " + e.getMessage());
-        }
+    @PostMapping("/repair")
+    public ResponseEntity<String> repairDatabase() {
+        flyway.repair();
+        return ResponseEntity.ok("Historial de Flyway reparado. Ya puedes reintentar la migración.");
     }
 }

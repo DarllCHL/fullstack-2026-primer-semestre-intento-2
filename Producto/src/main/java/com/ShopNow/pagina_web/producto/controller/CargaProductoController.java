@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/productos")
-@Tag(name = "Productos", description = "Operaciones CRUD para la gestión de productos")
+@Tag(name = "🔑 Administrador", description = "Endpoints exclusivos para usuarios con rol ROLE_ADMIN")
 @SecurityRequirement(name = "Bearer Token")
 public class CargaProductoController {
 
@@ -25,12 +25,13 @@ public class CargaProductoController {
 
     @Operation(
             summary = "Carga masiva de productos",
-            description = "Permite insertar múltiples productos en una sola petición. Retorna la cantidad procesada y el tiempo de ejecución."
+            description = "Permite insertar múltiples productos en una sola petición. Retorna la cantidad procesada y el tiempo de ejecución. Solo ADMIN."
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Productos cargados exitosamente"),
             @ApiResponse(responseCode = "400", description = "Lista vacía o datos inválidos"),
             @ApiResponse(responseCode = "401", description = "No autorizado, token inválido o ausente"),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado, se requiere rol ADMIN"),
             @ApiResponse(responseCode = "500", description = "Error interno durante la carga")
     })
     @PostMapping("/masivo")

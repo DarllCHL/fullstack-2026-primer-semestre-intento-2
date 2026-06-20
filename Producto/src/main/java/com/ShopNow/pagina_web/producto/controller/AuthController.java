@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-@Tag(name = "Autenticación", description = "Endpoints para login y registro de usuarios del sistema")
+@Tag(name = "🔓 Autenticación", description = "Endpoints públicos de acceso al sistema. El token JWT retornado contiene el rol del usuario: ROLE_ADMIN tiene acceso total, ROLE_USER solo accede a endpoints de Cliente.")
 public class AuthController {
 
     @Autowired private UserService userService;
@@ -27,7 +27,7 @@ public class AuthController {
 
     @Operation(
             summary = "Iniciar sesión",
-            description = "Autentica al usuario y retorna un token JWT para usar en los demás endpoints"
+            description = "Autentica al usuario y retorna un token JWT. Válido por 1 hora. Usarlo como Bearer Token en los endpoints protegidos."
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Login exitoso, retorna token JWT"),
@@ -48,8 +48,8 @@ public class AuthController {
     }
 
     @Operation(
-            summary = "Registrar usuario",
-            description = "Crea un nuevo usuario con rol ADMIN en el sistema. Usar solo para configuración inicial."
+            summary = "Registrar usuario del sistema",
+            description = "Crea un nuevo usuario con rol ADMIN. Solo puede ser usado por un ADMIN autenticado."
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Usuario creado correctamente"),

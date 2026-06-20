@@ -17,7 +17,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/productos")
-@Tag(name = "Productos", description = "Operaciones CRUD para la gestión de productos")
 @SecurityRequirement(name = "Bearer Token")
 public class ProductoController {
 
@@ -27,7 +26,8 @@ public class ProductoController {
     @Autowired
     private UsuarioClient usuarioClient;
 
-    @Operation(summary = "Obtener todos los productos", description = "Retorna la lista completa de productos activos")
+    @Tag(name = "👤 Cliente", description = "Endpoints disponibles para usuarios con rol ROLE_USER y ROLE_ADMIN")
+    @Operation(summary = "Obtener todos los productos", description = "Retorna la lista completa de productos activos disponibles en la tienda")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Lista obtenida exitosamente"),
             @ApiResponse(responseCode = "401", description = "No autorizado, token inválido o ausente")
@@ -37,6 +37,7 @@ public class ProductoController {
         return ResponseEntity.ok(service.obtenerProductos());
     }
 
+    @Tag(name = "👤 Cliente", description = "Endpoints disponibles para usuarios con rol ROLE_USER y ROLE_ADMIN")
     @Operation(summary = "Buscar producto por ID", description = "Retorna un producto según su ID")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Producto encontrado"),
@@ -50,7 +51,8 @@ public class ProductoController {
         return ResponseEntity.ok(service.buscarPorId(id));
     }
 
-    @Operation(summary = "Obtener usuario asociado al producto", description = "Consulta el microservicio Usuario para obtener el dueño del producto")
+    @Tag(name = "👤 Cliente", description = "Endpoints disponibles para usuarios con rol ROLE_USER y ROLE_ADMIN")
+    @Operation(summary = "Obtener usuario asociado al producto", description = "Consulta el microservicio Usuario para obtener el usuario asociado al producto")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Usuario encontrado"),
             @ApiResponse(responseCode = "404", description = "Producto o usuario no encontrado"),
@@ -63,22 +65,26 @@ public class ProductoController {
         return ResponseEntity.ok(usuarioClient.getUsuario(id));
     }
 
-    @Operation(summary = "Crear un nuevo producto", description = "Guarda un producto en la base de datos")
+    @Tag(name = "🔑 Administrador", description = "Endpoints exclusivos para usuarios con rol ROLE_ADMIN")
+    @Operation(summary = "Crear un nuevo producto", description = "Guarda un producto en la base de datos. Solo ADMIN.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Producto creado exitosamente"),
             @ApiResponse(responseCode = "400", description = "Datos inválidos"),
-            @ApiResponse(responseCode = "401", description = "No autorizado")
+            @ApiResponse(responseCode = "401", description = "No autorizado"),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado, se requiere rol ADMIN")
     })
     @PostMapping
     public ResponseEntity<Producto> guardar(@RequestBody Producto producto) {
         return ResponseEntity.ok(service.guardar(producto));
     }
 
-    @Operation(summary = "Actualizar un producto", description = "Modifica los datos de un producto existente")
+    @Tag(name = "🔑 Administrador", description = "Endpoints exclusivos para usuarios con rol ROLE_ADMIN")
+    @Operation(summary = "Actualizar un producto", description = "Modifica los datos de un producto existente. Solo ADMIN.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Producto actualizado exitosamente"),
             @ApiResponse(responseCode = "404", description = "Producto no encontrado"),
-            @ApiResponse(responseCode = "401", description = "No autorizado")
+            @ApiResponse(responseCode = "401", description = "No autorizado"),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado, se requiere rol ADMIN")
     })
     @PutMapping("/{id}")
     public ResponseEntity<Producto> actualizar(
@@ -88,11 +94,13 @@ public class ProductoController {
         return ResponseEntity.ok(service.actualizar(id, producto));
     }
 
-    @Operation(summary = "Eliminar un producto", description = "Elimina un producto de la base de datos según su ID")
+    @Tag(name = "🔑 Administrador", description = "Endpoints exclusivos para usuarios con rol ROLE_ADMIN")
+    @Operation(summary = "Eliminar un producto", description = "Elimina un producto de la base de datos. Solo ADMIN.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Producto eliminado exitosamente"),
             @ApiResponse(responseCode = "404", description = "Producto no encontrado"),
-            @ApiResponse(responseCode = "401", description = "No autorizado")
+            @ApiResponse(responseCode = "401", description = "No autorizado"),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado, se requiere rol ADMIN")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> eliminar(

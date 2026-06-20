@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/admin")
-@Tag(name = "Administración", description = "Endpoints exclusivos para usuarios con rol ADMIN")
+@Tag(name = "🔑 Administrador", description = "Endpoints exclusivos para usuarios con rol ROLE_ADMIN")
 @SecurityRequirement(name = "Bearer Token")
 public class AdminController {
 
@@ -23,8 +23,8 @@ public class AdminController {
             @ApiResponse(responseCode = "401", description = "No autorizado, token inválido o ausente"),
             @ApiResponse(responseCode = "403", description = "Acceso denegado, se requiere rol ADMIN")
     })
-    @GetMapping
-    public ResponseEntity<String> adminPanel() {
+    @GetMapping("/test")
+    public ResponseEntity<String> admin() {
         return ResponseEntity.ok("Bienvenido al panel de administración de ShopNow");
     }
 }
