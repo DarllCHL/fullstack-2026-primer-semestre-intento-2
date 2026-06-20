@@ -17,7 +17,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/usuarios")
-@Tag(name = "Usuarios", description = "Operaciones CRUD para la gestión de usuarios")
 @SecurityRequirement(name = "Bearer Token")
 public class UsuarioController {
 
@@ -27,6 +26,7 @@ public class UsuarioController {
     @Autowired
     private ProductoClient productoClient;
 
+    @Tag(name = "👤 Cliente", description = "Endpoints disponibles para usuarios con rol ROLE_USER y ROLE_ADMIN")
     @Operation(summary = "Obtener todos los usuarios", description = "Retorna la lista completa de usuarios registrados")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Lista obtenida exitosamente"),
@@ -37,6 +37,7 @@ public class UsuarioController {
         return ResponseEntity.ok(service.obtenerUsuarios());
     }
 
+    @Tag(name = "👤 Cliente", description = "Endpoints disponibles para usuarios con rol ROLE_USER y ROLE_ADMIN")
     @Operation(summary = "Buscar usuario por ID", description = "Retorna un usuario según su ID")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Usuario encontrado"),
@@ -50,6 +51,7 @@ public class UsuarioController {
         return ResponseEntity.ok(service.buscarPorId(id));
     }
 
+    @Tag(name = "👤 Cliente", description = "Endpoints disponibles para usuarios con rol ROLE_USER y ROLE_ADMIN")
     @Operation(summary = "Obtener producto asociado al usuario", description = "Consulta el microservicio Producto para obtener el producto asociado al usuario")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Producto encontrado"),
@@ -63,22 +65,26 @@ public class UsuarioController {
         return ResponseEntity.ok(productoClient.getProducto(id));
     }
 
-    @Operation(summary = "Crear un nuevo usuario", description = "Guarda un usuario en la base de datos")
+    @Tag(name = "🔑 Administrador", description = "Endpoints exclusivos para usuarios con rol ROLE_ADMIN")
+    @Operation(summary = "Crear un nuevo usuario", description = "Guarda un usuario en la base de datos. Solo ADMIN.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Usuario creado exitosamente"),
             @ApiResponse(responseCode = "400", description = "Datos inválidos"),
-            @ApiResponse(responseCode = "401", description = "No autorizado")
+            @ApiResponse(responseCode = "401", description = "No autorizado"),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado, se requiere rol ADMIN")
     })
     @PostMapping
     public ResponseEntity<Usuario> guardar(@RequestBody Usuario usuario) {
         return ResponseEntity.ok(service.guardar(usuario));
     }
 
-    @Operation(summary = "Actualizar un usuario", description = "Modifica los datos de un usuario existente")
+    @Tag(name = "🔑 Administrador", description = "Endpoints exclusivos para usuarios con rol ROLE_ADMIN")
+    @Operation(summary = "Actualizar un usuario", description = "Modifica los datos de un usuario existente. Solo ADMIN.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Usuario actualizado exitosamente"),
             @ApiResponse(responseCode = "404", description = "Usuario no encontrado"),
-            @ApiResponse(responseCode = "401", description = "No autorizado")
+            @ApiResponse(responseCode = "401", description = "No autorizado"),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado, se requiere rol ADMIN")
     })
     @PutMapping("/{id}")
     public ResponseEntity<Usuario> actualizar(
@@ -88,27 +94,18 @@ public class UsuarioController {
         return ResponseEntity.ok(service.actualizar(id, usuario));
     }
 
-    @Operation(summary = "Eliminar un usuario", description = "Elimina un usuario de la base de datos según su ID")
+    @Tag(name = "🔑 Administrador", description = "Endpoints exclusivos para usuarios con rol ROLE_ADMIN")
+    @Operation(summary = "Eliminar un usuario", description = "Elimina un usuario de la base de datos según su ID. Solo ADMIN.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Usuario eliminado exitosamente"),
             @ApiResponse(responseCode = "404", description = "Usuario no encontrado"),
-            @ApiResponse(responseCode = "401", description = "No autorizado")
+            @ApiResponse(responseCode = "401", description = "No autorizado"),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado, se requiere rol ADMIN")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> eliminar(
             @Parameter(description = "ID del usuario a eliminar", required = true, example = "1")
             @PathVariable Long id) {
         return ResponseEntity.ok(service.eliminar(id));
-    }
-
-    @Operation(summary = "Carga masiva de usuarios", description = "Permite insertar múltiples usuarios en una sola petición")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Usuarios cargados exitosamente"),
-            @ApiResponse(responseCode = "400", description = "Lista vacía o datos inválidos"),
-            @ApiResponse(responseCode = "401", description = "No autorizado")
-    })
-    @PostMapping("/masivo")
-    public ResponseEntity<List<Usuario>> guardarMasivo(@RequestBody List<Usuario> usuarios) {
-        return ResponseEntity.ok(service.guardarMasivo(usuarios));
     }
 }

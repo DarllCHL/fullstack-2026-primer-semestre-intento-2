@@ -28,11 +28,15 @@ public class SwaggerConfig {
                                 .scheme("bearer")
                                 .bearerFormat("JWT")))
                 .tags(List.of(
-                        new Tag().name("Autenticación").description("Endpoints para login y registro de usuarios del sistema"),
-                        new Tag().name("Administración").description("Endpoints exclusivos para usuarios con rol ADMIN"),
-                        new Tag().name("Órdenes").description("Consultas entre microservicios — Producto consulta a Usuario"),
-                        new Tag().name("Productos").description("Operaciones CRUD para la gestión de productos"),
-                        new Tag().name("Administración BD").description("Endpoints para verificar el estado de la base de datos")
+                        new Tag().name("🔓 Autenticación")
+                                .description("Endpoints públicos de acceso al sistema")
+                                .extensions(java.util.Map.of("x-order", 2)),
+                        new Tag().name("👤 Cliente")
+                                .description("Endpoints disponibles para usuarios con rol ROLE_USER y ROLE_ADMIN")
+                                .extensions(java.util.Map.of("x-order", 3)),
+                        new Tag().name("🔑 Administrador")
+                                .description("Endpoints exclusivos para usuarios con rol ROLE_ADMIN")
+                                .extensions(java.util.Map.of("x-order", 4))
                 ));
     }
 }

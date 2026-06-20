@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/admin")
-@Tag(name = "Administración", description = "Endpoints exclusivos para usuarios con rol ADMIN")
+@Tag(name = "🔑 Administrador", description = "Endpoints exclusivos para usuarios con rol ROLE_ADMIN")
 @SecurityRequirement(name = "Bearer Token")
 public class AdminController {
 

@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/admin/db")
-@Tag(name = "Administración BD", description = "Endpoints para administración de la base de datos")
-@SecurityRequirement(name = "Bearer Token")
+@Tag(name = "🔑 Administrador", description = "Endpoints exclusivos para usuarios con rol ROLE_ADMIN")@SecurityRequirement(name = "Bearer Token")
 public class DatabaseAdminController {
 
     private final Flyway flyway;

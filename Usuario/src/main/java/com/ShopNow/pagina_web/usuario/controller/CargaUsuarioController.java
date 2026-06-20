@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/usuarios")
-@Tag(name = "Usuarios", description = "Operaciones CRUD para la gestión de usuarios")
+@RequestMapping("/api/v1/usuarios")
+@Tag(name = "🔑 Administrador", description = "Endpoints exclusivos para usuarios con rol ROLE_ADMIN")
 @SecurityRequirement(name = "Bearer Token")
 public class CargaUsuarioController {
 
@@ -25,12 +25,13 @@ public class CargaUsuarioController {
 
     @Operation(
             summary = "Carga masiva de usuarios",
-            description = "Permite insertar múltiples usuarios en una sola petición. Retorna la cantidad procesada y el tiempo de ejecución."
+            description = "Permite insertar múltiples usuarios en una sola petición. Retorna la cantidad procesada y el tiempo de ejecución. Solo ADMIN."
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Usuarios cargados exitosamente"),
             @ApiResponse(responseCode = "400", description = "Lista vacía o datos inválidos"),
             @ApiResponse(responseCode = "401", description = "No autorizado, token inválido o ausente"),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado, se requiere rol ADMIN"),
             @ApiResponse(responseCode = "500", description = "Error interno durante la carga")
     })
     @PostMapping("/masivo")
@@ -43,6 +44,29 @@ public class CargaUsuarioController {
             service.procesarCarga(usuarios);
             long fin = System.currentTimeMillis();
             return ResponseEntity.ok("Éxito: " + usuarios.size() + " procesados en " + (fin - inicio) + "ms");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error en la carga: " + e.getMessage());
+        }
+    }
+
+    @Operation(
+            summary = "Carga masiva automática",
+            description = "Genera e inserta 100 usuarios genéricos numerados desde el último ID existente en BD. Solo ADMIN."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "100 usuarios creados exitosamente"),
+            @ApiResponse(responseCode = "401", description = "No autorizado, token inválido o ausente"),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado, se requiere rol ADMIN"),
+            @ApiResponse(responseCode = "500", description = "Error interno durante la carga")
+    })
+    @PostMapping("/masivo/auto")
+    public ResponseEntity<?> cargarAuto() {
+        try {
+            long inicio = System.currentTimeMillis();
+            int cantidad = service.procesarCargaAuto();
+            long fin = System.currentTimeMillis();
+            return ResponseEntity.ok("Éxito: " + cantidad + " usuarios creados en " + (fin - inicio) + "ms");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error en la carga: " + e.getMessage());

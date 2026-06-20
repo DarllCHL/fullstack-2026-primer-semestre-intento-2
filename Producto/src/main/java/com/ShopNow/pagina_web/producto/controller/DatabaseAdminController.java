@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/admin/db")
-@Tag(name = "🔑 Administrador", description = "Endpoints exclusivos para usuarios con rol ROLE_ADMIN")
-@SecurityRequirement(name = "Bearer Token")
+@Tag(name = "🔑 Administrador", description = "Endpoints exclusivos para usuarios con rol ROLE_ADMIN")@SecurityRequirement(name = "Bearer Token")
 public class DatabaseAdminController {
 
     private final Flyway flyway;
@@ -23,8 +22,7 @@ public class DatabaseAdminController {
 
     @Operation(
             summary = "Reparar historial de Flyway",
-            description = "Limpia las entradas fallidas en la tabla flyway_schema_history para permitir reintentar migraciones. Solo ADMIN."
-    )
+            description = "Limpia las entradas fallidas en la tabla flyway_schema_history para permitir reintentar migraciones. Solo ADMIN."    )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Historial de Flyway reparado exitosamente"),
             @ApiResponse(responseCode = "401", description = "No autorizado, token inválido o ausente"),

@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/orders")
-@Tag(name = "Órdenes", description = "Consultas entre microservicios — Usuario consulta a Producto")
+@Tag(name = "🔑 Administrador", description = "Endpoints exclusivos para usuarios con rol ROLE_ADMIN")
 @SecurityRequirement(name = "Bearer Token")
 public class OrderController {
 
@@ -31,6 +31,7 @@ public class OrderController {
             @ApiResponse(responseCode = "200", description = "Datos del producto obtenidos exitosamente"),
             @ApiResponse(responseCode = "404", description = "Producto no encontrado"),
             @ApiResponse(responseCode = "401", description = "No autorizado, token inválido o ausente"),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado, se requiere rol ADMIN"),
             @ApiResponse(responseCode = "500", description = "Error al comunicarse con el microservicio Producto")
     })
     @GetMapping("/{id}")

@@ -49,4 +49,27 @@ public class CargaProductoController {
                     .body("Error en la carga: " + e.getMessage());
         }
     }
+
+    @Operation(
+            summary = "Carga masiva automática",
+            description = "Genera e inserta 100 productos genéricos numerados desde el último ID existente en BD. Solo ADMIN."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "100 productos creados exitosamente"),
+            @ApiResponse(responseCode = "401", description = "No autorizado, token inválido o ausente"),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado, se requiere rol ADMIN"),
+            @ApiResponse(responseCode = "500", description = "Error interno durante la carga")
+    })
+    @PostMapping("/masivo/auto")
+    public ResponseEntity<?> cargarAuto() {
+        try {
+            long inicio = System.currentTimeMillis();
+            int cantidad = service.procesarCargaAuto();
+            long fin = System.currentTimeMillis();
+            return ResponseEntity.ok("Éxito: " + cantidad + " productos creados en " + (fin - inicio) + "ms");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error en la carga: " + e.getMessage());
+        }
+    }
 }

@@ -4,7 +4,10 @@ import com.ShopNow.pagina_web.usuario.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface UsuarioRepositoryJpa extends JpaRepository<Usuario, Long> {
     Usuario findByNombre(String nombre);
+    Optional<Usuario> findTopByOrderByIdDesc();
 }

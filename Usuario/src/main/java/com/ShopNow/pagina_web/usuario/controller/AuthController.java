@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-@Tag(name = "Autenticación", description = "Endpoints para login y registro de usuarios del sistema")
+@Tag(name = "🔓 Autenticación", description = "Endpoints públicos de acceso al sistema. El token JWT retornado contiene el rol del usuario: ROLE_ADMIN tiene acceso total, ROLE_USER solo accede a endpoints de Cliente.")
 @SecurityRequirement(name = "Bearer Token")
 public class AuthController {
 

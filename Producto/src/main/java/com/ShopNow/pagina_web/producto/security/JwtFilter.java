@@ -59,7 +59,8 @@ public class JwtFilter extends OncePerRequestFilter {
                 }
             }
         } catch (Exception e) {
-            // token malformado — no autentica, deja que Spring devuelva 401
+            System.out.println(">>> JWT ERROR: " + e.getClass().getSimpleName() + " - " + e.getMessage());
+
         }
 
         filterChain.doFilter(request, response);
