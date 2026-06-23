@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "`user`")
 @Schema(description = "Usuario del sistema con rol para autenticación JWT")
 public class User {
 
